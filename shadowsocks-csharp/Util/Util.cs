@@ -82,6 +82,16 @@ namespace Shadowsocks.Util
             }
         }
 
+        public static Process ExcuteExe(string exeName)
+        {
+            Process myProcess = new Process();
+            myProcess.StartInfo.UseShellExecute = false;
+            myProcess.StartInfo.FileName = exeName;
+            myProcess.StartInfo.CreateNoWindow = true;
+            myProcess.Start();
+            return myProcess;
+        }
+
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetProcessWorkingSetSize(IntPtr process,

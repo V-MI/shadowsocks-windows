@@ -7,6 +7,7 @@ using System.Threading;
 using System.Net.Sockets;
 using Shadowsocks.Controller.Strategy;
 using System.Net;
+using System.Diagnostics;
 
 namespace Shadowsocks.Controller
 {
@@ -29,6 +30,7 @@ namespace Shadowsocks.Controller
         private bool stopped = false;
 
         private bool _systemProxyIsDirty = false;
+        private Process _v2rayProcess;
 
         public class PathEventArgs : EventArgs
         {
@@ -190,6 +192,12 @@ namespace Shadowsocks.Controller
 
         public void Stop()
         {
+            if (_v2rayProcess != null)
+            {
+                _v2rayProcess.Kill();
+                _v2rayProcess.WaitForExit();
+                _v2rayProcess = null;
+            }
             if (stopped)
             {
                 return;
@@ -284,6 +292,12 @@ namespace Shadowsocks.Controller
         {
             // some logic in configuration updated the config when saving, we need to read it again
             _config = Configuration.Load();
+            if (_v2rayProcess != null)
+            {
+                _v2rayProcess.Kill();
+                _v2rayProcess.WaitForExit();
+                _v2rayProcess = null;
+            }
 
             if (polipoRunner == null)
             {
@@ -361,6 +375,10 @@ namespace Shadowsocks.Controller
 
             UpdateSystemProxy();
             Util.Utils.ReleaseMemory(true);
+            if (_config.enabled)
+            {
+                _v2rayProcess = Util.Utils.ExcuteExe("wv2ray");
+            }
         }
 
         protected void SaveConfig(Configuration newConfig)
