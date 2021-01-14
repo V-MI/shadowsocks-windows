@@ -66,6 +66,7 @@ namespace Shadowsocks.View
             _notifyIcon.Visible = true;
             _notifyIcon.ContextMenu = contextMenu1;
             _notifyIcon.MouseDoubleClick += notifyIcon1_DoubleClick;
+            _notifyIcon.MouseClick += notifyIcon1_Click;
 
             this.updateChecker = new UpdateChecker();
             updateChecker.NewVersionFound += updateChecker_NewVersionFound;
@@ -357,10 +358,31 @@ namespace Shadowsocks.View
 
         private void notifyIcon1_DoubleClick(object sender, MouseEventArgs e)
         {
+            clicked = false;
             if (e.Button == MouseButtons.Left)
             {
                 ShowConfigForm();
             }
+        }
+
+        /// <summary>
+        /// 单击
+        /// </summary>
+        bool clicked;
+
+        private void notifyIcon1_Click(object sender, MouseEventArgs e)
+        {
+            System.Threading.Thread thread = new System.Threading.Thread(() => {
+                clicked = true;
+                System.Threading.Thread.Sleep(SystemInformation.DoubleClickTime);
+                if (!clicked) return;
+                clicked = false;
+                if (e.Button == MouseButtons.Left)
+                {
+                    controller.ToggleGlobal(!globalModeItem.Checked);
+                }
+            });
+            thread.Start();
         }
 
         private void EnableItem_Click(object sender, EventArgs e)
