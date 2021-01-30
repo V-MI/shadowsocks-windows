@@ -235,6 +235,13 @@ namespace Shadowsocks.Controller
             }
         }
 
+        public void AddProxyDomain(string domain)
+        {
+            string userRuleFilename = _pacServer.TouchUserRuleFile();
+            File.AppendAllText(userRuleFilename, domain + "\n");
+            this.UpdatePACFromGFWList(this.Reload);
+        }
+
         public string GetQRCodeForCurrentServer()
         {
             Server server = GetCurrentServer();
@@ -248,11 +255,11 @@ namespace Shadowsocks.Controller
             return "ss://" + base64;
         }
 
-        public void UpdatePACFromGFWList()
+        public void UpdatePACFromGFWList(Action reload = null)
         {
             if (gfwListUpdater != null)
             {
-                gfwListUpdater.UpdatePACFromGFWList(_config);
+                gfwListUpdater.UpdatePACFromGFWList(_config, reload);
             }
         }
 

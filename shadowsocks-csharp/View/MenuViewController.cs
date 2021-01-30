@@ -177,6 +177,7 @@ namespace Shadowsocks.View
                     this.editGFWUserRuleItem = CreateMenuItem("Edit User Rule for GFWList...", new EventHandler(this.EditUserRuleFileForGFWListItem_Click)),
                     this.editOnlinePACItem = CreateMenuItem("Edit Online PAC URL...", new EventHandler(this.UpdateOnlinePACURLItem_Click)),
                 }),
+                CreateMenuItem("Add Proxy Domain", new EventHandler(this.AddProxyDomain_Click)),
                 new MenuItem("-"),
                 this.AutoStartupItem = CreateMenuItem("Start on Boot", new EventHandler(this.AutoStartupItem_Click)),
                 this.AvailabilityStatistics = CreateMenuItem("Availability Statistics", new EventHandler(this.AvailabilityStatisticsItem_Click)),
@@ -431,6 +432,12 @@ namespace Shadowsocks.View
         {
             MenuItem item = (MenuItem)sender;
             controller.SelectStrategy((string)item.Tag);
+        }
+
+        private void AddProxyDomain_Click(object sender, EventArgs e)
+        {
+            AddProxyDomain addProxyDomain = new AddProxyDomain(this.controller);
+            addProxyDomain.Show();
         }
 
         private void ShowLogItem_Click(object sender, EventArgs e)

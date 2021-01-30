@@ -12,7 +12,7 @@ namespace Shadowsocks.Controller
 {
     public class GFWListUpdater
     {
-        private const string GFWLIST_URL = "https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt";
+        private const string GFWLIST_URL = "https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt";
 
         private static string PAC_FILE = PACServer.PAC_FILE;
 
@@ -74,11 +74,17 @@ namespace Shadowsocks.Controller
             }
         }
 
-        public void UpdatePACFromGFWList(Configuration config)
+        public void UpdatePACFromGFWList(Configuration config, Action reload = null)
         {
             WebClient http = new WebClient();
             http.Proxy = new WebProxy(IPAddress.Loopback.ToString(), config.localPort);
-            http.DownloadStringCompleted += http_DownloadStringCompleted;
+            http.DownloadStringCompleted += (sender, e) => {
+                http_DownloadStringCompleted(sender, e);
+                if (reload != null)
+                {
+                    reload();
+                }
+            };
             http.DownloadStringAsync(new Uri(GFWLIST_URL));
         }
 

@@ -7,6 +7,7 @@ Shadowsocks=Shadowsocks
 Enable System Proxy=启用系统代理
 Mode=系统代理模式
 PAC=PAC 模式
+Add Proxy Domain=添加代理域名
 Global=全局模式
 Servers=服务器
 Edit Servers...=编辑服务器...
