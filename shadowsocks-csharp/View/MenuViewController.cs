@@ -124,6 +124,20 @@ namespace Shadowsocks.View
                 }
                 icon = iconCopy;
             }
+            if (config.global)
+            {
+                Bitmap iconCopy = new Bitmap(icon);
+                for (int x = 0; x < iconCopy.Width; x++)
+                {
+                    for (int y = 0; y < iconCopy.Height; y++)
+                    {
+                        Color color = icon.GetPixel(x, y);
+                        Color targetColor = Color.DeepSkyBlue;
+                        iconCopy.SetPixel(x, y, Color.FromArgb(color.A, targetColor.R, targetColor.G, targetColor.B));
+                    }
+                }
+                icon = iconCopy;
+            }
             _notifyIcon.Icon = Icon.FromHandle(icon.GetHicon());
 
             string serverInfo = null;
